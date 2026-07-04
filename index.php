@@ -65,6 +65,15 @@ $bot->dispatcher()->onNewMessage(function (Update $update) use ($bot) {
     $bot->sendMessage($update->chat_id, "سلام دنیا! پیام شما: {$text}");
 });
 
+$requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'UNKNOWN';
+$requestHeaders = function_exists('getallheaders') ? getallheaders() : array();
+$rawInput = file_get_contents('php://input');
+$payload = json_decode($rawInput, true);
+
+if (!is_array($payload)) {
+    $payload = array();
+}
+
 \RubikaBot\debugLog('Incoming webhook request', array(
     'method' => $requestMethod,
     'headers' => $requestHeaders,
