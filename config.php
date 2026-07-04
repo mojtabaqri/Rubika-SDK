@@ -76,7 +76,7 @@ if (!is_dir(dirname(DB_FILE))) {
     mkdir(dirname(DB_FILE), 0777, true);
 }
 
-if (session_status() === PHP_SESSION_NONE) {
+if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
     session_start([
         'cookie_httponly' => true,
         'cookie_secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',

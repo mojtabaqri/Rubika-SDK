@@ -46,7 +46,7 @@ class AuthService
      * @param string $ip آدرس IP
      * @return array|false مشخصات ادمین یا false
      */
-    public static function loginAdmin(string $username, string $password, string $ip = ''): array|false
+    public static function loginAdmin(string $username, string $password, string $ip = '')
     {
         $username = trim($username);
         $ip = $ip ?: self::getClientIp();
@@ -101,7 +101,7 @@ class AuthService
      * @param string $ip آدرس IP
      * @return array|false مشخصات کاربر یا false
      */
-    public static function loginUser(int $userId, string $ip = ''): array|false
+    public static function loginUser(int $userId, string $ip = '')
     {
         $ip = $ip ?: self::getClientIp();
         
@@ -139,7 +139,7 @@ class AuthService
      * @param array $extra داده‌های اضافی
      * @return string|false توکن یا false
      */
-    public static function createAccessToken(int $id, string $type = 'user', array $extra = []): string|false
+    public static function createAccessToken(int $id, string $type = 'user', array $extra = [])
     {
         try {
             $issuedAt = time();
@@ -173,7 +173,7 @@ class AuthService
      * @param string $type نوع توکن
      * @return string|false توکن یا false
      */
-    public static function createRefreshToken(int $id, string $type = 'user'): string|false
+    public static function createRefreshToken(int $id, string $type = 'user')
     {
         try {
             $issuedAt = time();
@@ -202,7 +202,7 @@ class AuthService
      * @param string $token توکن
      * @return object|false اطلاعات توکن یا false
      */
-    public static function verifyAccessToken(string $token): object|false
+    public static function verifyAccessToken(string $token)
     {
         try {
             $decoded = JWT::decode($token, new Key(self::getSecretKey(), self::ALGORITHM));
@@ -225,7 +225,7 @@ class AuthService
      * @param string $token توکن
      * @return object|false اطلاعات توکن یا false
      */
-    public static function verifyRefreshToken(string $token): object|false
+    public static function verifyRefreshToken(string $token)
     {
         try {
             $decoded = JWT::decode($token, new Key(self::getSecretKey(), self::ALGORITHM));
@@ -248,7 +248,7 @@ class AuthService
      * @param string $refreshToken
      * @return array|false آرایه‌ای با access_token جدید یا false
      */
-    public static function refreshAccessToken(string $refreshToken): array|false
+    public static function refreshAccessToken(string $refreshToken)
     {
         $decoded = self::verifyRefreshToken($refreshToken);
         if (!$decoded) {
@@ -280,7 +280,7 @@ class AuthService
      * @param string $ip آدرس IP
      * @return array|false مشخصات و توکن‌ها یا false
      */
-    public static function login(string $username, string $password, bool $isAdmin = false, string $ip = ''): array|false
+    public static function login(string $username, string $password, bool $isAdmin = false, string $ip = '')
     {
         $ip = $ip ?: self::getClientIp();
         
@@ -504,7 +504,7 @@ class AuthService
      * @param string $role نقش
      * @return array|false
      */
-    public static function createAdmin(string $username, string $password, string $fullName, string $email = '', string $role = 'admin'): array|false
+    public static function createAdmin(string $username, string $password, string $fullName, string $email = '', string $role = 'admin')
     {
         try {
             if (strlen($password) < 8) {

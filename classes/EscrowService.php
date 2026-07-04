@@ -34,7 +34,7 @@ class EscrowService
         float $amount,
         string $description = '',
         array $metadata = []
-    ): array|false {
+    ) {
         try {
             // بررسی مبلغ
             if ($amount <= 0 || !is_finite($amount)) {
@@ -155,7 +155,7 @@ class EscrowService
      * @param string $returnUrl URL بازگشت
      * @return array|false شامل authority کوپال یا false
      */
-    public static function initializePayment(int $escrowId, string $returnUrl = ''): array|false
+    public static function initializePayment(int $escrowId, string $returnUrl = '')
     {
         try {
             $escrow = self::getEscrow($escrowId);

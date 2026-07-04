@@ -31,7 +31,7 @@ class KYCService
      * @param array $files فایل‌های آپلود شده
      * @return array|false
      */
-    public static function submitKYC(int $userId, array $data, array $files = []): array|false
+    public static function submitKYC(int $userId, array $data, array $files = [])
     {
         try {
             $db = Database::get();
@@ -112,7 +112,7 @@ class KYCService
     /**
      * روش سازگار با کدهای قدیمی که روی نمونه‌ی کلاس فراخوانی می‌شوند.
      */
-    public function submitVerification(int $userId, array $data, array $files = []): array|false
+    public function submitVerification(int $userId, array $data, array $files = [])
     {
         return self::submitKYC($userId, $data, $files);
     }
@@ -120,7 +120,7 @@ class KYCService
     /**
      * روش سازگار با کدهای قدیمی که روی نمونه‌ی کلاس فراخوانی می‌شوند.
      */
-    public function submitVerificationFromText(int $userId, array $data): array|false
+    public function submitVerificationFromText(int $userId, array $data)
     {
         return self::submitKYC($userId, $data, []);
     }
@@ -301,7 +301,7 @@ class KYCService
         return $controlDigit === (int)$digits[9];
     }
 
-    private static function validateFile(array $file): true|string
+    private static function validateFile(array $file)
     {
         // بررسی اندازه
         if ($file['size'] > self::MAX_FILE_SIZE) {
