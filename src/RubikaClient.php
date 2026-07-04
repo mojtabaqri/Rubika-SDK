@@ -34,7 +34,7 @@ class RubikaClient
     public function call($method, array $params = array())
     {
         $url = sprintf('%s/%s/%s', $this->baseUrl, $this->token, $method);
-        $payload = json_encode($params, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $payload = http_build_query($params, '', '&', PHP_QUERY_RFC3986);
 
         \RubikaBot\debugLog('Outgoing external API request', array(
             'method' => $method,
@@ -48,7 +48,7 @@ class RubikaClient
         curl_setopt_array($ch, array(
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => $payload,
-            CURLOPT_HTTPHEADER => array('Content-Type: application/json'),
+            CURLOPT_HTTPHEADER => array('Content-Type: application/x-www-form-urlencoded'),
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT => 20,
         ));
