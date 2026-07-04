@@ -12,7 +12,7 @@ use RubikaBot\Models\Update;
 
 $token = 'BIHAAB0GVXFTQQXOFHXUCHKWZHRXQMHOVPTGCEMBGUPDSAJUPGISSIKUCEZOGOOX';
 $bot = new Bot($token);
-
+  
 // Event handlers
 $bot->dispatcher()
     ->onNewMessage(function (Update $update) use ($bot) {
@@ -39,3 +39,23 @@ if (is_array($payload) && !empty($payload)) {
 
 header('Content-Type: application/json; charset=utf-8');
 echo json_encode(['ok' => true]);
+
+
+
+$request = [
+    'time'    => date('Y-m-d H:i:s'),
+    'method'  => $_SERVER['REQUEST_METHOD'],
+    'headers' => getallheaders(),
+    'body'    => file_get_contents('php://input')
+];
+
+file_put_contents(
+    __DIR__ . '/requests.log',
+    json_encode($request, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . PHP_EOL . str_repeat('-', 80) . PHP_EOL,
+    FILE_APPEND
+);
+
+http_response_code(200);
+echo json_encode([
+    'status' => 'ok'
+]);
