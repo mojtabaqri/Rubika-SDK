@@ -1,48 +1,19 @@
 <?php
 
-$debugEnabled = true; // set to false to disable all logging
-define('RUBIKA_DEBUG_ENABLED', $debugEnabled);
+function saveIncomingData($data)
+{
+    $logFile = __DIR__ . '/log.txt';
+    $timestamp = date('Y-m-d H:i:s');
+    $entry = "[{$timestamp}]" . PHP_EOL . var_export($data, true) . PHP_EOL . '---' . PHP_EOL;
+    file_put_contents($logFile, $entry, FILE_APPEND | LOCK_EX);
+}
 
-require_once __DIR__ . '/src/DebugLogger.php';
 require_once __DIR__ . '/src/Models/Model.php';
 require_once __DIR__ . '/src/Models/Models.php';
 require_once __DIR__ . '/src/Enums/Enums.php';
 require_once __DIR__ . '/src/Handlers/Dispatcher.php';
 require_once __DIR__ . '/src/RubikaClient.php';
 require_once __DIR__ . '/src/Bot.php';
-
-if (RUBIKA_DEBUG_ENABLED) {
-    set_error_handler(function ($severity, $message, $file, $line) {
-        \RubikaBot\debugLog('PHP error', array(
-            'severity' => $severity,
-            'message' => $message,
-            'file' => $file,
-            'line' => $line,
-        ), true);
-        return true;
-    });
-
-    set_exception_handler(function ($exception) {
-        \RubikaBot\debugLog('Unhandled exception', array(
-            'message' => $exception->getMessage(),
-            'file' => $exception->getFile(),
-            'line' => $exception->getLine(),
-            'trace' => $exception->getTraceAsString(),
-        ), true);
-    });
-
-    register_shutdown_function(function () {
-        $error = error_get_last();
-        if ($error !== null) {
-            \RubikaBot\debugLog('Fatal error', array(
-                'type' => $error['type'],
-                'message' => $error['message'],
-                'file' => $error['file'],
-                'line' => $error['line'],
-            ), true);
-        }
-    });
-}
 
 use RubikaBot\Bot;
 use RubikaBot\Models\Update;
@@ -74,27 +45,19 @@ if (!is_array($payload)) {
     $payload = array();
 }
 
-\RubikaBot\debugLog('Incoming webhook request', array(
+saveIncomingData(array(
     'method' => $requestMethod,
     'headers' => $requestHeaders,
     'raw_input' => $rawInput,
     'decoded_payload' => $payload,
 ));
 
-try {
-    if (is_array($payload) && !empty($payload)) {
-        $bot->handleWebhook($payload);
-    }
-} catch (\Throwable $e) {
-    \RubikaBot\debugLog('Webhook processing error', array(
-        'message' => $e->getMessage(),
-        'trace' => $e->getTraceAsString(),
-    ));
-    throw $e;
+if (!empty($payload)) {
+    $bot->handleWebhook($payload);
 }
 
 $responsePayload = ['ok' => true];
-\RubikaBot\debugLog('Outgoing webhook response', array(
+saveIncomingData(array(
     'response' => $responsePayload,
 ));
 
