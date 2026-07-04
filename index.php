@@ -1,45 +1,50 @@
 <?php
 
-require_once __DIR__ . '/src/Models/Model.php';
-require_once __DIR__ . '/src/Models/Models.php';
-require_once __DIR__ . '/src/Enums/Enums.php';
-require_once __DIR__ . '/src/Handlers/Dispatcher.php';
-require_once __DIR__ . '/src/RubikaClient.php';
-require_once __DIR__ . '/src/Bot.php';
+$token = "BIHAAB0GVXFTQQXOFHXUCHKWZHRXQMHOVPTGCEMBGUPDSAJUPGISSIKUCEZOGOOX";
+$chatId = "b0BsqLd0pPb05eb9ecffb526a9d97e28";
 
-use RubikaBot\Bot;
-use RubikaBot\Models\Update;
+// دریافت Raw JSON از روبیکا
+$raw = file_get_contents("php://input");
 
-$token = 'BIHAAB0GVXFTQQXOFHXUCHKWZHRXQMHOVPTGCEMBGUPDSAJUPGISSIKUCEZOGOOX';
-$bot = new Bot($token);
-  
-// Event handlers
-$bot->dispatcher()
-    ->onNewMessage(function (Update $update) use ($bot) {
-        if (!$update->new_message) {
-            return;
-        }
+// تبدیل به JSON خوانا
+$text = json_encode(
+    json_decode($raw, true),
+    JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+);
 
-        $text = trim($update->new_message->text ?? '');
-        
-        if ($text === '/start') {
-            $bot->sendMessage($update->chat_id, "سلام! به ربات خوش آمدی 👋");
-        } else {
-            $bot->sendMessage($update->chat_id, "سلام دنیا! پیام شما: {$text}");
-        }
-    });
-
-// Process webhook
-$rawInput = file_get_contents('php://input');
-$payload = json_decode($rawInput, true);
-
-if (is_array($payload) && !empty($payload)) {
-    $bot->handleWebhook($payload);
+if ($text === "null") {
+    $text = $raw;
 }
 
-header('Content-Type: application/json; charset=utf-8');
-//echo json_encode(['ok' => true]);
+// محدودیت طول پیام
+if (mb_strlen($text) > 3500) {
+    $text = mb_substr($text, 0, 3500);
+}
 
+$data = [
+    "chat_id" => $chatId,
+    "text" => $text
+];
 
+$ch = curl_init("https://botapi.rubika.ir/v3/$token/sendMessage");
 
-var_dump($rawInput);
+curl_setopt_array($ch, [
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_POST => true,
+    CURLOPT_HTTPHEADER => [
+        "Content-Type: application/json"
+    ],
+    CURLOPT_POSTFIELDS => json_encode(
+        $data,
+        JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+    ),
+]);
+
+$response = curl_exec($ch);
+
+curl_close($ch);
+
+// پاسخ به روبیکا
+echo json_encode([
+    "status" => "OK"
+]);
