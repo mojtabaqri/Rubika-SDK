@@ -1,0 +1,18 @@
+{
+    "name": "vambanbot/rubika-sdk",
+    "description": "Rubika bot SDK with Composer PSR-4 autoload support.",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "RubikaBot\\": "src/"
+        },
+        "files": [
+            "src/DebugLogger.php",
+            "src/RequestLogger.php"
+        ]
+    },
+    "require": {
+        "php": ">=7.4"
+    },
+    "license": "MIT"
+}

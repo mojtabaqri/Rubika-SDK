@@ -1,22 +1,10 @@
 <?php
 
-function saveIncomingData($data)
-{
-    $logFile = __DIR__ . '/log.txt';
-    $timestamp = date('Y-m-d H:i:s');
-    $entry = "[{$timestamp}]" . PHP_EOL . var_export($data, true) . PHP_EOL . '---' . PHP_EOL;
-    file_put_contents($logFile, $entry, FILE_APPEND | LOCK_EX);
-}
-
-require_once __DIR__ . '/src/Models/Model.php';
-require_once __DIR__ . '/src/Models/Models.php';
-require_once __DIR__ . '/src/Enums/Enums.php';
-require_once __DIR__ . '/src/Handlers/Dispatcher.php';
-require_once __DIR__ . '/src/RubikaClient.php';
-require_once __DIR__ . '/src/Bot.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 use RubikaBot\Bot;
 use RubikaBot\Models\Update;
+use function RubikaBot\saveIncomingRequest;
 
 $token = 'BIHAAB0GVXFTQQXOFHXUCHKWZHRXQMHOVPTGCEMBGUPDSAJUPGISSIKUCEZOGOOX';
 $bot = new Bot($token);
@@ -45,7 +33,7 @@ if (!is_array($payload)) {
     $payload = array();
 }
 
-saveIncomingData(array(
+saveIncomingRequest(array(
     'method' => $requestMethod,
     'headers' => $requestHeaders,
     'raw_input' => $rawInput,
@@ -57,7 +45,7 @@ if (!empty($payload)) {
 }
 
 $responsePayload = ['ok' => true];
-saveIncomingData(array(
+saveIncomingRequest(array(
     'response' => $responsePayload,
 ));
 
