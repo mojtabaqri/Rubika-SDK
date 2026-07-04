@@ -34,11 +34,20 @@ class RubikaClient
     public function call($method, array $params = array())
     {
         $url = sprintf('%s/%s/%s', $this->baseUrl, $this->token, $method);
+        $payload = json_encode($params, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        \RubikaBot\debugLog('Outgoing external API request', array(
+            'method' => $method,
+            'url' => $url,
+            'payload' => $params,
+            'raw_payload' => $payload,
+        ));
+
         $ch = curl_init($url);
 
         curl_setopt_array($ch, array(
             CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => json_encode($params, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+            CURLOPT_POSTFIELDS => $payload,
             CURLOPT_HTTPHEADER => array('Content-Type: application/json'),
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT => 20,
@@ -49,12 +58,23 @@ class RubikaClient
         if ($response === false) {
             $error = curl_error($ch);
             curl_close($ch);
+            \RubikaBot\debugLog('Outgoing external API request failed', array(
+                'method' => $method,
+                'url' => $url,
+                'error' => $error,
+            ), true);
             throw new \RuntimeException("خطای cURL در فراخوانی {$method}: {$error}");
         }
 
         curl_close($ch);
 
         $decoded = json_decode($response, true);
+        \RubikaBot\debugLog('Incoming external API response', array(
+            'method' => $method,
+            'url' => $url,
+            'response' => $decoded,
+            'raw_response' => $response,
+        ));
 
         return is_array($decoded) ? $decoded : array();
     }
