@@ -41,7 +41,7 @@ src/
 ### ۱) کپی یا کلون کردن پروژه
 
 ```bash
-git clone https://github.com/your-username/Rubika-SDK.git
+git clone https://github.com/mojtabaqri/Rubika-SDK.git
 cd Rubika-SDK
 ```
 
