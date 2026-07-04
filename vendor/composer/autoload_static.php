@@ -17,12 +17,20 @@ class ComposerStaticInitc9be9107d1f09a26c0ac5dd0168ee9e7
         array (
             'RubikaBot\\' => 10,
         ),
+        'F' =>
+        array (
+            'Firebase\\JWT\\' => 13,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
         'RubikaBot\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src',
+        ),
+        'Firebase\\JWT\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
     );
 

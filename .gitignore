@@ -1,1 +1,4 @@
 hook.php
+.env
+data/
+logger.txt
