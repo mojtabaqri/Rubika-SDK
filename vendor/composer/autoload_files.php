@@ -8,4 +8,5 @@ $baseDir = dirname($vendorDir);
 return array(
     'd52cd1d56390d29051f8418930133d22' => $baseDir . '/src/DebugLogger.php',
     '2e5b67dc613d2d9ead28b777bcec31af' => $baseDir . '/src/RequestLogger.php',
+    'f07e94e75d00bddf58effb047c35bf06' => $baseDir . '/src/Enums/Enums.php',
 );
